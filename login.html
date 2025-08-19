@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluesky Login</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #bb86fc;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"], input[type="password"], button {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        button {
+            background-color: #3700b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #6200ea;
+        }
+
+        label {
+            color: #bb86fc;
+        }
+
+        #statusMessage {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login para Bluesky (Não estou roubando sua senha.... eu acho)</h2>
+    <form id="loginForm">
+        <input type="text" id="identifier" required>
+        <label for="identifier">User sem o @</label><br><br>
+        <input type="password" id="password" required>
+        <label for="password">Senha</label><br><br>
+        <button type="submit">Login</button>
+    </form>
+    
+    <p id="statusMessage"></p>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+
+            if (!identifier || !password) {
+                document.getElementById('statusMessage').textContent = 'Please enter both identifier and password.';
+                return;
+            }
+
+            await ipcRenderer.invoke('submit-login', { identifier, password });
+        });
+    </script>
+</body>
+</html>
